@@ -29,7 +29,7 @@ VERSION_CUTOFF = (3, 11)
 # versions greater than VERSION_CUTOFF.
 PACKAGES_TO_TEST = {
     'pandas': {
-        'version': '2.2.3',
+        'version': '2.3.3',
         'legacy_version': '1.5.3',
         'contents': [
             'pandas/*__init__.py',
@@ -215,7 +215,7 @@ class TestPackage(object):
         )
 
     def test_can_package_pandas(self, runner, app_skeleton, no_local_config):
-        version = '2.2.3' if sys.version_info[1] >= 10 else '2.0.3'
+        version = '2.3.3' if sys.version_info[1] >= 14 else '2.2.3'
         assert_can_package_dependency(
             runner,
             app_skeleton,

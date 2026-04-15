@@ -225,6 +225,15 @@ class TestDependencyBuilder(object):
         with open(filepath, 'w') as f:
             f.write(contents)
 
+    def _expected_manylinux_args(self, runner, abi, architecture='x86_64'):
+        expected_args = [
+            '--only-binary=:all:', '--no-deps', '--implementation', 'cp',
+            '--abi', abi, '--dest', mock.ANY
+        ]
+        for platform in runner._get_manylinux_platforms(abi, architecture):
+            expected_args.extend(['--platform', platform])
+        return expected_args
+
     def _make_appdir_and_dependency_builder(self, reqs, tmpdir, runner):
         appdir = str(_create_app_structure(tmpdir))
         self._write_requirements_txt(reqs, appdir)
@@ -270,9 +279,7 @@ class TestDependencyBuilder(object):
         # Secondary download for a compatible only one fails
         pip.packages_to_download(
             expected_args=[
-                '--only-binary=:all:', '--no-deps', '--platform',
-                'manylinux2014_x86_64', '--implementation', 'cp',
-                '--abi', 'cp36m', '--dest', mock.ANY,
+                *self._expected_manylinux_args(runner, 'cp36m'),
                 'foo==1.2'
             ],
             packages=[]
@@ -767,9 +774,7 @@ class TestDependencyBuilder(object):
         # more targeted download, finds manylinux1_x86_64 and downloads that.
         pip.packages_to_download(
             expected_args=[
-                '--only-binary=:all:', '--no-deps', '--platform',
-                'manylinux2014_x86_64', '--implementation', 'cp',
-                '--abi', 'cp36m', '--dest', mock.ANY,
+                *self._expected_manylinux_args(runner, 'cp36m'),
                 'bar==1.2'
             ],
             packages=[
@@ -783,6 +788,78 @@ class TestDependencyBuilder(object):
         pip.validate()
         for req in reqs:
             assert req in installed_packages
+
+    def test_can_replace_incompat_whl_cp314_with_perennial_manylinux(
+        self, tmpdir, osutils, pip_runner
+    ):
+        reqs = ['pandas']
+        pip, runner = pip_runner
+        appdir, builder = self._make_appdir_and_dependency_builder(
+            reqs, tmpdir, runner)
+        requirements_file = os.path.join(appdir, 'requirements.txt')
+        pip.packages_to_download(
+            expected_args=['-r', requirements_file, '--dest', mock.ANY],
+            packages=[
+                'pandas-2.3.3-cp314-cp314-macosx_11_0_arm64.whl',
+            ]
+        )
+        pip.packages_to_download(
+            expected_args=[
+                *self._expected_manylinux_args(runner, 'cp314'),
+                'pandas==2.3.3'
+            ],
+            packages=[
+                (
+                    'pandas-2.3.3-cp314-cp314-'
+                    'manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl'
+                ),
+            ]
+        )
+        site_packages = os.path.join(appdir, '.chalice.', 'site-packages')
+        builder.build_site_packages('cp314', requirements_file, site_packages)
+        installed_packages = os.listdir(site_packages)
+
+        pip.validate()
+        assert reqs == installed_packages
+
+    def test_can_install_nested_package_files_from_wheel(
+        self, tmpdir, pip_runner
+    ):
+        reqs = ['pandas']
+        pip, runner = pip_runner
+        appdir, builder = self._make_appdir_and_dependency_builder(
+            reqs, tmpdir, runner)
+        requirements_file = os.path.join(appdir, 'requirements.txt')
+        pip.packages_to_download(
+            expected_args=['-r', requirements_file, '--dest', mock.ANY],
+            packages=[
+                (
+                    'pandas-2.3.3-cp314-cp314-'
+                    'manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl'
+                )
+            ],
+            whl_contents=[
+                '{package_name}/__init__.py',
+                '{package_name}/_libs/__init__.py',
+                '{package_name}/_libs/algos.cpython-314-x86_64-linux-gnu.so',
+            ]
+        )
+
+        site_packages = os.path.join(appdir, '.chalice.', 'site-packages')
+        builder.build_site_packages('cp314', requirements_file, site_packages)
+
+        pip.validate()
+        assert os.path.isfile(
+            os.path.join(site_packages, 'pandas', '_libs', '__init__.py')
+        )
+        assert os.path.isfile(
+            os.path.join(
+                site_packages,
+                'pandas',
+                '_libs',
+                'algos.cpython-314-x86_64-linux-gnu.so',
+            )
+        )
 
     @pytest.mark.parametrize(
         'package,package_filename', [
@@ -809,9 +886,7 @@ class TestDependencyBuilder(object):
         )
         pip.packages_to_download(
             expected_args=[
-                '--only-binary=:all:', '--no-deps', '--platform',
-                'manylinux2014_x86_64', '--implementation', 'cp',
-                '--abi', abi, '--dest', mock.ANY,
+                *self._expected_manylinux_args(runner, abi),
                 '%s==1.1.18' % package
             ],
             packages=[
@@ -966,9 +1041,7 @@ class TestDependencyBuilder(object):
         )
         pip.packages_to_download(
             expected_args=[
-                '--only-binary=:all:', '--no-deps', '--platform',
-                'manylinux2014_x86_64', '--implementation', 'cp',
-                '--abi', abi, '--dest', mock.ANY,
+                *self._expected_manylinux_args(runner, abi),
                 'foo==1.2'
             ],
             packages=[
