@@ -21,7 +21,7 @@ Installation and Configuration
 
 This tutorial requires that both Chalice and the AWS CDK is installed.
 The CDK is written in Typescript and requires node and npm to be installed.
-See the `Getting started with the AWS CDK <https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites>`__
+See the `Getting started with the AWS CDK <https://docs.aws.amazon.com/cdk/v2/guide/#getting_started_prerequisites>`__
 for more details on install the CDK.
 
 First, we'll install the CDK.

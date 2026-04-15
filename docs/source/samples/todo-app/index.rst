@@ -301,7 +301,8 @@ is defined by the ``TodoDB`` interface, which is defined in the
   :caption: chalicelib/db.py
   :linenos:
   :lineno-match:
-  :pyobject: TodoDB
+  :start-at: class TodoDB(object):
+  :end-before: class InMemoryTodoDB(TodoDB):
 
 There are two different implementations of this interface.  The first one,
 ``InMemoryTodoDB``, is an in-memory implementation of this interface where
@@ -312,14 +313,14 @@ using ``chalice local``.  The other implementation of ``TodoDB`` interface is
 ``DynamoDBTodo``, which communicates with the actual DynamoDB service
 to store and retrieve Todo items.  It uses the Table resource of ``boto3``,
 created via ``boto3.resource('dynamodb').Table(TABLE_NAME)``.  This allows
-us to use the `high level querying interface of boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/customizations/dynamodb.html#dynamodb-conditions>`__.
+us to use the `high level querying interface of boto3 <https://docs.aws.amazon.com/boto3/latest/reference/customizations/dynamodb.html#dynamodb-conditions>`__.
 The implementation is shown below.
 
 .. literalinclude:: code/chalicelib/db.py
   :caption: chalicelib/db.py
   :linenos:
   :lineno-match:
-  :pyobject: DynamoDBTodo
+  :start-at: class DynamoDBTodo(TodoDB):
 
 .. _todo-app-jwt-auth:
 
@@ -375,7 +376,8 @@ Below is the code for the ``/login`` route:
   :caption: app.py
   :linenos:
   :lineno-match:
-  :pyobject: login
+  :start-at: @app.route('/login', methods=['POST'])
+  :end-before: @app.authorizer()
 
 In this login view, we first lookup the user record fom our users DB,
 and then try to generate a JWT token for this entry.  The
@@ -387,7 +389,8 @@ for this user as shown in the code below:
   :caption: chalicelib/auth.py
   :linenos:
   :lineno-match:
-  :pyobject: get_jwt_token
+  :start-at: def get_jwt_token(username, password, record, secret):
+  :end-before: def decode_jwt_token(token, secret):
 
 The call to ``jwt.encode()`` requires a payload and a secret.
 This secret is a value that is only known to our application and is
@@ -402,7 +405,8 @@ defined in our ``app.py`` file:
   :caption: app.py
   :linenos:
   :lineno-match:
-  :pyobject: get_auth_key
+  :start-at: def get_auth_key():
+  :end-before: def get_users_db():
 
 Once we've generated a JWT token, we return the token back to the caller.
 They must then provide that same token in the ``Authorization`` header
@@ -427,7 +431,8 @@ authorizer is shown below:
   :caption: app.py
   :linenos:
   :lineno-match:
-  :pyobject: jwt_auth
+  :start-at: @app.authorizer()
+  :end-before: def get_auth_key():
 
 Once we verify that JWT token is valid, we return an ``AuthResponse`` that
 specifies what routes the user is allowed to access.  In our example, we're
@@ -442,7 +447,8 @@ the function as the value of the ``authorizer=`` parameter.  We saw this in the
   :caption: app.py
   :linenos:
   :lineno-match:
-  :pyobject: list_todos
+  :start-at: @app.route('/todos', methods=['GET'], authorizer=jwt_auth)
+  :end-before: @app.route('/todos', methods=['POST'], authorizer=jwt_auth)
 
 
 Cleaning Up

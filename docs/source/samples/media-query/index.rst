@@ -116,7 +116,7 @@ install Chalice::
 
 
 We'll also be using the AWS CLI to help deploy our application, you can
-follow the `installation instructions <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html>`__
+follow the `installation instructions <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>`__
 if you don't have the AWS CLI installed.
 
 Next, we'll use the AWS CLI to deploy a CloudFormation stack containing the S3
@@ -412,7 +412,7 @@ Rekognition will publish to when the job is complete, as shown in the
 .. literalinclude:: code/app.py
   :linenos:
   :lineno-match:
-  :pyobject: _handle_created_video
+  :start-at: def _handle_created_video(bucket, key):
 
 The ``add_video_file()`` function will then query for the results
 of the job (the ``JobId`` is provided as part of the SNS message
@@ -449,7 +449,8 @@ around the ``put_item()`` operation of the underlying DynamoDB API:
 .. literalinclude:: code/chalicelib/db.py
   :linenos:
   :lineno-match:
-  :pyobject: DynamoMediaDB.add_media_file
+  :start-at: def add_media_file(self, name, media_type, labels=None):
+  :end-before: def get_media_file(self, name):
 
 
 We see a similar pattern in ``chalicelib/rekognition.py``.  Here's the
@@ -459,7 +460,8 @@ discussed in the previous section.
 .. literalinclude:: code/chalicelib/rekognition.py
   :linenos:
   :lineno-match:
-  :pyobject: RekognitonClient.start_video_label_job
+  :start-at: def start_video_label_job(self, bucket, key, topic_arn, role_arn):
+  :end-before: def get_video_job_labels(self, job_id):
 
 As you can see, it's a small wrapper around the ``start_label_detection``
 operation of the underlying Rekognition API.

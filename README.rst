@@ -153,7 +153,7 @@ can follow these steps to quickly get started::
 If you want more information on all the supported methods for
 configuring credentials, see the
 `boto3 docs
-<http://boto3.readthedocs.io/en/latest/guide/configuration.html>`__.
+<https://docs.aws.amazon.com/boto3/latest/guide/configuration.html>`__.
 
 
 Creating Your Project

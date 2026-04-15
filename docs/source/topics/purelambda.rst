@@ -52,4 +52,4 @@ You'll need to manage connecting them to any additional AWS Resources on your
 own.
 
 
-.. _defined here: https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
+.. _defined here: https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html

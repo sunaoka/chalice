@@ -273,6 +273,6 @@ should be granted based on the scopes configured for the authorizer and route.
 
 
 .. _IAM permissions: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_controlling.html
-.. _Cognito User Pools: https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html
+.. _Cognito User Pools: https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html
 .. _Cognito Resource Server: https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html
 .. _API Gateway documentation: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html

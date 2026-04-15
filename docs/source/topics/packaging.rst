@@ -14,7 +14,7 @@ from 3rd party package dependencies.
 By default, Chalice will create a single zip file containing everything
 necessary to deploy your application to Lambda.  Chalice also has
 the ability to split your code into multiple files to leverage
-`AWS Lambda layers <https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html>`__.
+`AWS Lambda layers <https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html>`__.
 This is discussed in the :ref:`package-3rd-party` section below.
 
 App Directories

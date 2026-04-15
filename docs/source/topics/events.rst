@@ -76,7 +76,7 @@ CloudWatch Events
 ==================
 
 You can configure a lambda function to subscribe to
-any `CloudWatch Event <https://amzn.to/2SCgWA6>`__.
+any `CloudWatch Event <https://docs.aws.amazon.com/eventbridge/latest/userguide/>`__.
 
 To subscribe to a CloudWatch Event in chalice, you use the
 ``@app.on_cw_event()`` decorator.  Let's look at an example.
@@ -94,7 +94,7 @@ In this example, we have a single lambda function that we subscribe to all
 events from the AWS Code Commit service. The first parameter to the decorator
 is the event pattern that will be used to filter the events sent to the function.
 
-See the `CloudWatch Event pattern docs <https://amzn.to/2OlqZso>`__
+See the `CloudWatch Event pattern docs <https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html>`__
 for additional syntax and examples.
 
 The function you decorate must accept a single argument,
@@ -424,6 +424,6 @@ For more information on using Lambda and DynamoDB, see
 `Using AWS Lambda with Amazon DynamoDB <https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html>`__.
 
 
-.. _event notifications: https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
+.. _event notifications: https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html
 .. _AWS documentation: https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
-.. _Understanding Scaling Behavior: https://docs.aws.amazon.com/lambda/latest/dg/scaling.html
+.. _Understanding Scaling Behavior: https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html

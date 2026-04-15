@@ -25,7 +25,7 @@ basic Chalice app created with::
 
 
 We'll also be using the AWS CLI in this tutorial.  You can follow
-`these instructions <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html>`__
+`these instructions <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>`__
 for installing the AWS CLI v2.
 
 
