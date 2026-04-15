@@ -2095,8 +2095,9 @@ class KinesisRecord(BaseLambdaEvent):
         self.sequence_number: str = kinesis['sequenceNumber']
         self.partition_key: str = kinesis['partitionKey']
         self.schema_version: str = kinesis['kinesisSchemaVersion']
-        self.timestamp: datetime.datetime = datetime.datetime.utcfromtimestamp(
-            kinesis['approximateArrivalTimestamp'])
+        self.timestamp: datetime.datetime = datetime.datetime.fromtimestamp(
+            kinesis['approximateArrivalTimestamp'], datetime.timezone.utc
+        ).replace(tzinfo=None)
 
 
 class DynamoDBEvent(BaseLambdaEvent):
@@ -2112,8 +2113,9 @@ class DynamoDBRecord(BaseLambdaEvent):
 
     def _extract_attributes(self, event_dict: Dict[str, Any]) -> None:
         dynamodb = event_dict['dynamodb']
-        self.timestamp: datetime.datetime = datetime.datetime.utcfromtimestamp(
-            dynamodb['ApproximateCreationDateTime'])
+        self.timestamp: datetime.datetime = datetime.datetime.fromtimestamp(
+            dynamodb['ApproximateCreationDateTime'], datetime.timezone.utc
+        ).replace(tzinfo=None)
         self.keys: Any = dynamodb.get('Keys')
         self.new_image: Any = dynamodb.get('NewImage')
         self.old_image: Any = dynamodb.get('OldImage')

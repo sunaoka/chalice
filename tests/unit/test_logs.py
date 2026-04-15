@@ -1,6 +1,6 @@
 import time
 from unittest import mock
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from chalice import logs
 from chalice.awsclient import TypedAWSClient
@@ -282,12 +282,14 @@ def test_follow_logs_defaults_to_ten_minutes():
     # that the start_time used is more recent than 10 minutes from now.
     # This is a safe assumption because we're saving the current time before
     # we invoke iter_log_events().
-    ten_minutes = datetime.utcnow() - timedelta(minutes=10)
+    ten_minutes = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(
+        minutes=10
+    )
     options = logs.LogRetrieveOptions.create(follow=True)
     assert options.start_time >= ten_minutes
 
 
 def test_dont_default_if_explicit_since_is_provided():
-    utcnow = datetime.utcnow()
+    utcnow = datetime.now(timezone.utc).replace(tzinfo=None)
     options = logs.LogRetrieveOptions.create(follow=True, since=str(utcnow))
     assert options.start_time == utcnow
