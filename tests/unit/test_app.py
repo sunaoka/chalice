@@ -2217,7 +2217,25 @@ def test_bytes_when_binary_type_is_application_json():
         }
         return Response(body=payload, status_code=200, headers=custom_headers)
 
-    return demo
+    event = {
+        'multiValueQueryStringParameters': {},
+        'headers': {'Accept': 'application/json'},
+        'pathParameters': {},
+        'requestContext': {
+            'httpMethod': 'GET',
+            'resourcePath': '/compress_response',
+        },
+        'body': None,
+        'stageVariables': {},
+        'isBase64Encoded': False,
+    }
+    response = demo(event, context=None)
+    assert response['statusCode'] == 200
+    assert response['isBase64Encoded'] is True
+    assert response['headers']['Content-Type'] == 'application/json'
+    assert response['headers']['Content-Encoding'] == 'gzip'
+    payload = gzip.decompress(base64.b64decode(response['body']))
+    assert json.loads(payload.decode('utf-8')) == {'hello': 'world'}
 
 
 def test_can_register_blueprint_on_app():
