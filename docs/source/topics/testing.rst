@@ -272,7 +272,7 @@ Testing Boto3 Client Calls
 
 If your event handlers are making AWS API calls using boto3 or botocore,
 you can use the `botocore stubber
-<https://botocore.amazonaws.com/v1/documentation/api/latest/reference/stubber.html>`__
+<https://docs.aws.amazon.com/botocore/latest/reference/stubber.html>`__
 to test your API calls.  For example, suppose we have an app that makes an
 API call to Amazon Rekognition whenever an object is uploaded to S3:
 
@@ -369,7 +369,7 @@ Both the Botocore stubber and the Chalice test client are used within
 a context manager.  In our previous example, this resulted in multiple
 levels of nesting, which is required for every test we write.  If you're
 using pytest as your test framework, you can create
-`test fixtures <https://docs.pytest.org/en/stable/fixture.html>`__ to
+`test fixtures <https://docs.pytest.org/en/stable/explanation/fixtures.html>`__ to
 reduce the boiler plate code.  Let's rewrite several of these tests to use
 pytest fixtures.
 

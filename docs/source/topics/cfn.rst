@@ -2,13 +2,13 @@ AWS CloudFormation Support
 ==========================
 
 When you run ``chalice deploy``, chalice will deploy your application using the
-`AWS SDK for Python <http://boto3.readthedocs.io/en/docs/>`__).  Chalice also
+`AWS SDK for Python <https://docs.aws.amazon.com/boto3/latest/>`__).  Chalice also
 provides functionality that allows you to manage deployments yourself using
 cloudformation.  This is provided via the ``chalice package`` command.
 
 When you run this command, chalice will generate the AWS Lambda deployment
 package that contains your application as well as a `Serverless Application
-Model (SAM) <https://github.com/awslabs/serverless-application-model>`__
+Model (SAM) <https://github.com/aws/serverless-application-model>`__
 template.  You can then use a tool like the AWS CLI, or any cloudformation
 deployment tools you use, to deploy your chalice application.
 

@@ -108,7 +108,7 @@ a change needs to be deployed.
 The default CodeCommit repository that is created is empty, you will have to
 populate it with the Chalice application code. Permissions will also need to be
 set up, you can find the documentation on how to do that
-`here <https://docs.aws.amazon.com/codebuild/latest/userguide/setting-up.html>`_
+`here <https://docs.aws.amazon.com/codebuild/latest/userguide/advanced-topics.html>`_
 .
 
 You can retrieve the CodeCommit clone URL by searching for the
@@ -204,10 +204,10 @@ name of ``GithubRepoAccess`` and a JSON key name of ``OAuthToken``.
 Below is an example of how to configure a GitHub repository as the
 source for your deployment pipeline.
 
-First create a `GitHub token <https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token>`__
+First create a `GitHub token <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens>`__
 that can be used in this template.  Next create a secret in AWS Secrets
 Manager.  You can either follow the documentation
-`here <https://docs.aws.amazon.com/secretsmanager/latest/userguide/manage_create-basic-secret.html>`__
+`here <https://docs.aws.amazon.com/secretsmanager/latest/userguide/managing-secrets.html>`__
 or use the AWS CLI or any AWS SDK.  For this example, we'll use the AWS CLI
 to create our secret.  Create a file named ``/tmp/secrets.json`` with these
 contents::

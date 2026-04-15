@@ -87,7 +87,7 @@ a hosted zone created for your domain, you can skip this step.
 
 We'll be using the AWS CLI V2 to configure our domain.  You can follow
 the
-`installation instructions <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html>`__
+`installation instructions <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>`__
 if you don't have the AWS CLI installed.
 
 ::
@@ -158,8 +158,8 @@ This process demonstrates that we own or control the domain name associated
 with the certificate.
 In the command above, we used the ``--validation-method DNS``, which
 requires us to add CNAME records to validate we control our domain name.
-ACM supports both `DNS validation <https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-dns.html>`__
-as well as `email validation <https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-validate-email.html>`__.
+ACM supports both `DNS validation <https://docs.aws.amazon.com/acm/latest/userguide/dns-validation.html>`__
+as well as `email validation <https://docs.aws.amazon.com/acm/latest/userguide/email-validation.html>`__.
 
 To validate our domain, we'll now create the necessary CNAME records in our
 hosted zone using the Route53 API.  First, we need to retrieve the values

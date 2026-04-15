@@ -9,7 +9,7 @@ and choose a base path to map the alternative URL to your API.
 You must have an AWS managed certificate created or imported through
 AWS Certificate Manager (ACM) in order to configure a custom domain name
 for REST and WebSocket APIs.
-See `Get certificate in AWS Certificate Manager <https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains-prerequisites.html>`__
+See `Get certificate in AWS Certificate Manager <https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-specify-certificate-for-custom-domain-name.html>`__
 for more information.
 
 Custom domain name can be configured per Chalice stage.

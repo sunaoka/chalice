@@ -31,7 +31,7 @@ Chalice
 
       A Lambda context object that is passed to the invoked view by AWS
       Lambda. You can find out more about this object by reading the
-      `lambda context object documentation <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_.
+      `lambda context object documentation <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_.
 
       .. note::
 
@@ -179,7 +179,7 @@ Chalice
         instance of type ``ScheduleExpression``, which is either a
         :class:`Cron` or :class:`Rate` object.  If a string value is
         provided, it will be provided directly as the ``ScheduleExpression``
-        value in the `PutRule <https://docs.aws.amazon.com/AmazonCloudWatchEvents/latest/APIReference/API_PutRule.html#API_PutRule_RequestSyntax>`__ API
+        value in the `PutRule <https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_PutRule.html#API_PutRule_RequestSyntax>`__ API
         call.
 
       :param name: The name of the function to use.  This name is combined
@@ -194,7 +194,7 @@ Chalice
       or Event Bridge.
 
       :param pattern: The event pattern to use to filter subscribed events.
-        See the CloudWatch Events docs for examples https://amzn.to/2OlqZso
+        See the CloudWatch Events docs for examples https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html
 
       :param name: The name of the function to create.  This name is combined
         with the chalice app name as well as the stage name to create the
@@ -232,7 +232,7 @@ Chalice
       :param bucket: The name of the S3 bucket.  This bucket must already exist.
 
       :param events: A list of strings indicating the events that should trigger
-        the lambda function.  See `Supported Event Types <https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#supported-notification-event-types>`__
+        the lambda function.  See `Supported Event Types <https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html#supported-notification-event-types>`__
         for the full list of strings you can provide.  If this option is not
         provided, a default of ``['s3:ObjectCreated:*']`` is used, which will
         configure the lambda function to be invoked whenever a new object
@@ -655,7 +655,7 @@ Request
 
      A Lambda context object that is passed to the invoked view by AWS
      Lambda. You can find out more about this object by reading the
-     `lambda context object documentation <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_.
+     `lambda context object documentation <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_.
 
   .. method:: to_dict()
 
@@ -1120,7 +1120,7 @@ Event Sources
     supported.
 
   For more information, see the API
-  `docs page <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions>`__.
+  `docs page <https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html#CronExpressions>`__.
 
   Examples:
 
@@ -1216,7 +1216,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1270,7 +1270,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1312,7 +1312,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1349,7 +1349,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1378,7 +1378,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda.
 
    .. method:: to_dict()
@@ -1411,7 +1411,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1452,7 +1452,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda.
 
    .. method:: to_dict()
@@ -1487,7 +1487,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda. This is useful if you need
       the AWS request ID for tracing, or any other data in the context object.
 
@@ -1558,7 +1558,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda.
 
    .. method:: to_dict()
@@ -1579,7 +1579,7 @@ Event Sources
 
    .. attribute:: context
 
-      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html>`_
+      A `Lambda context object <https://docs.aws.amazon.com/lambda/latest/dg/python-context.html>`_
       that is passed to the handler by AWS Lambda.
 
 Blueprints

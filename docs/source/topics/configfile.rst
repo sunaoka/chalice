@@ -47,7 +47,7 @@ be checked.
 The endpoint configuration of the deployed API Gateway which determines how the
 API will be accessed, can be EDGE, REGIONAL, PRIVATE. Note this value can only
 be set as a top level key and defaults to EDGE. For more information see
-https://amzn.to/2LofApt
+https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-endpoint-types.html
 
 
 ``api_gateway_endpoint_vpce``
@@ -676,8 +676,8 @@ We can accomplish all this with this config file::
     "app_name": "demo"
   }
 
-.. _AWS Lambda VPC documentation: https://docs.aws.amazon.com/lambda/latest/dg/vpc.html#vpc-configuring
-.. _AWS Documentation on managing concurrency: https://docs.aws.amazon.com/lambda/latest/dg/concurrent-executions.html
-.. _AWS Lambda Layers Configuration: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
+.. _AWS Lambda VPC documentation: https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html#vpc-configuring
+.. _AWS Documentation on managing concurrency: https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html
+.. _AWS Lambda Layers Configuration: https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html
 .. _AWS Custom Domain names setup: https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html
 .. _AWS Api Mapping key:    https://docs.aws.amazon.com/apigatewayv2/latest/api-reference/domainnames-domainname-apimappings.html
