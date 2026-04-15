@@ -411,8 +411,9 @@ class SymbolTableTypeInfer(ast.NodeVisitor):
         rhs_inferred_type = self._get_inferred_type_for_node(node.value)
         if rhs_inferred_type is None:
             # Special casing assignment to a string literal.
-            if isinstance(node.value, ast.Str):
-                rhs_inferred_type = StringLiteral(node.value.s)
+            if (isinstance(node.value, ast.Constant) and
+                    isinstance(node.value.value, str)):
+                rhs_inferred_type = StringLiteral(node.value.value)
                 self._set_inferred_type_for_node(node.value, rhs_inferred_type)
         for t in node.targets:
             if isinstance(t, ast.Name):
@@ -451,9 +452,10 @@ class SymbolTableTypeInfer(ast.NodeVisitor):
             # e_0(e_1) : B3CT[e_1]
             if len(node.args) >= 1:
                 service_arg = node.args[0]
-                if isinstance(service_arg, ast.Str):
+                if (isinstance(service_arg, ast.Constant) and
+                        isinstance(service_arg.value, str)):
                     self._set_inferred_type_for_node(
-                        node, Boto3ClientType(service_arg.s))
+                        node, Boto3ClientType(service_arg.value))
                 elif isinstance(self._get_inferred_type_for_node(service_arg),
                                 StringLiteral):
                     sub_type = self._get_inferred_type_for_node(service_arg)

@@ -90,9 +90,9 @@ class PipelineParameters(object):
                  chalice_version_range=None, pipeline_version='v1'):
         # type: (str, str, Optional[str], str, Optional[str], str) -> None
         self.app_name = app_name
-        # lambda_python_version is what matches lambda, e.g. 'python3.9'.
+        # lambda_python_version is what matches lambda, e.g. 'python3.14'.
         self.lambda_python_version = lambda_python_version
-        # py_major_minor is just the version string, e.g. '3.9'
+        # py_major_minor is just the version string, e.g. '3.14'
         self.py_major_minor = self._extract_version(lambda_python_version)
         self.codebuild_image = codebuild_image
         self.code_source = code_source

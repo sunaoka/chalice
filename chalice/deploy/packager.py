@@ -34,6 +34,40 @@ OptBytes = Optional[bytes]
 
 logger = logging.getLogger(__name__)
 
+PLATFORM_ARCH = {
+    'x86_64': 'x86_64',
+    'arm64': 'aarch64',
+}
+
+LEGACY_MANYLINUX_MAP = {
+    'x86_64': {
+        'manylinux1_x86_64': (2, 5),
+        'manylinux2010_x86_64': (2, 12),
+        'manylinux2014_x86_64': (2, 17),
+    },
+    'arm64': {
+        'manylinux2014_aarch64': (2, 17),
+    },
+}
+
+# Mapping of abi to glibc version in Lambda runtime.
+RUNTIME_GLIBC = {
+    'cp27mu': (2, 17),
+    'cp36m': (2, 17),
+    'cp37m': (2, 17),
+    'cp38': (2, 26),
+    'cp310': (2, 26),
+    'cp311': (2, 26),
+    'cp312': (2, 34),
+    'cp313': (2, 34),
+    'cp314': (2, 34),
+}
+
+# Fallback version if we're on an unknown python version
+# not in RUNTIME_GLIBC.
+# Unlikely to hit this case.
+DEFAULT_GLIBC = (2, 17)
+
 
 class InvalidSourceDistributionNameError(Exception):
     pass
@@ -77,11 +111,11 @@ class BaseLambdaDeploymentPackager(object):
     _VENDOR_DIR = 'vendor'
 
     _RUNTIME_TO_ABI = {
-        'python3.9': 'cp39',
         'python3.10': 'cp310',
         'python3.11': 'cp311',
         'python3.12': 'cp312',
         'python3.13': 'cp313',
+        'python3.14': 'cp314',
     }
 
     def __init__(
@@ -537,35 +571,16 @@ class DependencyBuilder(object):
     """
 
     _MANYLINUX_LEGACY_MAP = {
-        'x86_64': {
-            'manylinux1_x86_64': 'manylinux_2_5_x86_64',
-            'manylinux2010_x86_64': 'manylinux_2_12_x86_64',
-            'manylinux2014_x86_64': 'manylinux_2_17_x86_64',
-        },
-        'arm64': {
-            'manylinux2014_aarch64': 'manylinux_2_17_aarch64',
-        },
+        architecture: {
+            legacy_tag: 'manylinux_%s_%s_%s'
+            % (glibc_major, glibc_minor, PLATFORM_ARCH[architecture])
+            for legacy_tag, (glibc_major, glibc_minor) in legacy_tags.items()
+        }
+        for architecture, legacy_tags in LEGACY_MANYLINUX_MAP.items()
     }
-    _PLATFORM_ARCH = {
-        'x86_64': 'x86_64',
-        'arm64': 'aarch64',
-    }
-
-    # Mapping of abi to glibc version in Lambda runtime.
-    _RUNTIME_GLIBC = {
-        'cp27mu': (2, 17),
-        'cp36m': (2, 17),
-        'cp37m': (2, 17),
-        'cp38': (2, 26),
-        'cp310': (2, 26),
-        'cp311': (2, 26),
-        'cp312': (2, 34),
-        'cp313': (2, 34),
-    }
-    # Fallback version if we're on an unknown python version
-    # not in _RUNTIME_GLIBC.
-    # Unlikely to hit this case.
-    _DEFAULT_GLIBC = (2, 17)
+    _PLATFORM_ARCH = PLATFORM_ARCH
+    _RUNTIME_GLIBC = RUNTIME_GLIBC
+    _DEFAULT_GLIBC = DEFAULT_GLIBC
 
     _COMPATIBLE_PACKAGE_WHITELIST = {
         'sqlalchemy',
@@ -1179,10 +1194,10 @@ class PipRunner(object):
     _LINK_IS_DIR_PATTERN = (
         "Processing (.+?)\n  Link is a directory, ignoring download_dir"
     )
-    _MANYLINUX_PLATFORM = {
-        'x86_64': 'manylinux2014_x86_64',
-        'arm64': 'manylinux2014_aarch64',
-    }
+    _LEGACY_MANYLINUX_MAP = LEGACY_MANYLINUX_MAP
+    _RUNTIME_GLIBC = RUNTIME_GLIBC
+    _DEFAULT_GLIBC = DEFAULT_GLIBC
+    _PLATFORM_ARCH = PLATFORM_ARCH
 
     def __init__(
         self, pip: SubprocessPip, osutils: Optional[OSUtils] = None
@@ -1277,22 +1292,46 @@ class PipRunner(object):
         # compatible with lambda, which means manylinux1_x86_64 platform and
         # cpython implementation. The compatible abi depends on the python
         # version and is checked later.
-        platform = self._MANYLINUX_PLATFORM[architecture]
+        platforms = self._get_manylinux_platforms(abi, architecture)
         for package in packages:
             arguments = [
                 '--only-binary=:all:',
                 '--no-deps',
-                '--platform',
-                platform,
                 '--implementation',
                 'cp',
                 '--abi',
                 abi,
                 '--dest',
                 directory,
-                package,
             ]
+            for platform in platforms:
+                arguments.extend(['--platform', platform])
+            arguments.append(package)
             self._execute('download', arguments)
+
+    def _get_manylinux_platforms(
+        self, abi: str, architecture: str
+    ) -> List[str]:
+        runtime_glibc = self._RUNTIME_GLIBC.get(abi, self._DEFAULT_GLIBC)
+        platform_arch = self._PLATFORM_ARCH[architecture]
+        minimum_glibc = min(
+            legacy_glibc
+            for legacy_glibc in self._LEGACY_MANYLINUX_MAP[
+                architecture
+            ].values()
+        )
+        platforms = [
+            'manylinux_%s_%s_%s' % (runtime_glibc[0], minor, platform_arch)
+            for minor in range(runtime_glibc[1], minimum_glibc[1] - 1, -1)
+        ]
+        for legacy_platform, legacy_glibc in sorted(
+            self._LEGACY_MANYLINUX_MAP[architecture].items(),
+            key=lambda item: item[1],
+            reverse=True,
+        ):
+            if legacy_glibc <= runtime_glibc:
+                platforms.append(legacy_platform)
+        return platforms
 
     def download_sdists(self, packages: List[str], directory: str) -> None:
         for package in packages:

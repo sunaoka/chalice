@@ -144,6 +144,14 @@ class TestPackage(object):
 
 
 class TestPipRunner(object):
+    def _expected_download_prefix(self, runner, abi, architecture='x86_64'):
+        expected_prefix = ['download', '--only-binary=:all:', '--no-deps',
+                           '--implementation', 'cp', '--abi', abi,
+                           '--dest', 'directory']
+        for platform in runner._get_manylinux_platforms(abi, architecture):
+            expected_prefix.extend(['--platform', platform])
+        return expected_prefix
+
     def test_does_propagate_env_vars(self, pip_factory):
         osutils = CustomEnv({'foo': 'bar'})
         pip, runner = pip_factory(osutils)
@@ -217,10 +225,7 @@ class TestPipRunner(object):
         packages = ['foo', 'bar', 'baz']
         abi = 'cp37m'
         runner.download_manylinux_wheels(abi, packages, 'directory')
-        expected_prefix = ['download', '--only-binary=:all:', '--no-deps',
-                           '--platform', 'manylinux2014_x86_64',
-                           '--implementation', 'cp', '--abi', abi,
-                           '--dest', 'directory']
+        expected_prefix = self._expected_download_prefix(runner, abi)
         for i, package in enumerate(packages):
             assert pip.calls[i].args == expected_prefix + [package]
             assert pip.calls[i].env_vars is None
@@ -233,14 +238,30 @@ class TestPipRunner(object):
         runner.download_manylinux_wheels(
             abi, packages, 'directory', architecture='arm64'
         )
-        assert pip.calls[0].args == [
-            'download', '--only-binary=:all:', '--no-deps',
-            '--platform', 'manylinux2014_aarch64',
-            '--implementation', 'cp', '--abi', abi,
-            '--dest', 'directory', 'foo'
-        ]
+        assert pip.calls[0].args == (
+            self._expected_download_prefix(runner, abi, 'arm64') + ['foo']
+        )
         assert pip.calls[0].env_vars is None
         assert pip.calls[0].shim is None
+
+    def test_download_wheels_cp314_uses_perennial_manylinux(self, pip_factory):
+        pip, runner = pip_factory()
+        runner.download_manylinux_wheels('cp314', ['foo'], 'directory')
+        assert pip.calls[0].args == (
+            self._expected_download_prefix(runner, 'cp314') + ['foo']
+        )
+        assert pip.calls[0].env_vars is None
+        assert pip.calls[0].shim is None
+
+    def test_download_wheels_cp314_includes_older_manylinux_tags(
+        self, pip_factory
+    ):
+        _, runner = pip_factory()
+        platforms = runner._get_manylinux_platforms('cp314', 'x86_64')
+        assert 'manylinux_2_34_x86_64' in platforms
+        assert 'manylinux_2_28_x86_64' in platforms
+        assert 'manylinux_2_24_x86_64' in platforms
+        assert 'manylinux2014_x86_64' in platforms
 
     def test_download_wheels_no_wheels(self, pip_factory):
         pip, runner = pip_factory()
