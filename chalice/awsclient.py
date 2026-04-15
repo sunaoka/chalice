@@ -19,7 +19,7 @@ from __future__ import annotations
 import os
 import time
 import tempfile
-from datetime import datetime
+from datetime import datetime, timezone
 import zipfile
 import shutil
 import json
@@ -1466,7 +1466,9 @@ class TypedAWSClient(object):
                 yield event
 
     def _convert_to_datetime(self, integer_timestamp: int) -> datetime:
-        return datetime.utcfromtimestamp(integer_timestamp / 1000.0)
+        return datetime.fromtimestamp(
+            integer_timestamp / 1000.0, timezone.utc
+        ).replace(tzinfo=None)
 
     def filter_log_events(
         self,

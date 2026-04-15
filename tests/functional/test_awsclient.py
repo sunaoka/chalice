@@ -138,7 +138,9 @@ def test_can_iterate_logs(stubbed_session):
 
     awsclient = TypedAWSClient(stubbed_session)
     logs = list(awsclient.iter_log_events('loggroup'))
-    timestamp = datetime.datetime.utcfromtimestamp(1501278366)
+    timestamp = datetime.datetime.fromtimestamp(
+        1501278366, datetime.timezone.utc
+    ).replace(tzinfo=None)
     assert logs == [
         {'logStreamName': 'logStreamName',
          # We should have converted the ints to timestamps.
@@ -152,10 +154,16 @@ def test_can_iterate_logs(stubbed_session):
 
 
 def test_can_provide_optional_start_time_iter_logs(stubbed_session):
-    timestamp = int(datetime2timestamp(datetime.datetime.utcnow()) * 1000)
-    # We need to convert back from timestamp instead of using utcnow() directly
+    timestamp = int(
+        datetime2timestamp(
+            datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+        ) * 1000
+    )
+    # We need to convert back from timestamp instead of using now() directly
     # because the loss of precision in sub ms time.
-    datetime_now = datetime.datetime.utcfromtimestamp(timestamp / 1000.0)
+    datetime_now = datetime.datetime.fromtimestamp(
+        timestamp / 1000.0, datetime.timezone.utc
+    ).replace(tzinfo=None)
     stubbed_session.stub('logs').filter_log_events(
         logGroupName='loggroup', interleaved=True).returns({
             "events": [{
@@ -208,7 +216,9 @@ def test_can_call_filter_log_events(stubbed_session):
         }],
     })
     stubbed_session.activate_stubs()
-    timestamp = datetime.datetime.utcfromtimestamp(1501278366)
+    timestamp = datetime.datetime.fromtimestamp(
+        1501278366, datetime.timezone.utc
+    ).replace(tzinfo=None)
     awsclient = TypedAWSClient(stubbed_session)
     assert awsclient.filter_log_events(
         log_group_name='loggroup',
@@ -238,7 +248,9 @@ def test_optional_kwarg_on_filter_logs_omitted(stubbed_session):
         }],
     })
     stubbed_session.activate_stubs()
-    timestamp = datetime.datetime.utcfromtimestamp(1501278366)
+    timestamp = datetime.datetime.fromtimestamp(
+        1501278366, datetime.timezone.utc
+    ).replace(tzinfo=None)
     awsclient = TypedAWSClient(stubbed_session)
     assert awsclient.filter_log_events(
         log_group_name='loggroup',
