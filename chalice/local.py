@@ -341,6 +341,7 @@ class LocalGatewayAuthorizer(object):
                                "principalId": cognito_username}
                 lambda_event = self._update_lambda_event(lambda_event,
                                                          auth_result)
+                return lambda_event, lambda_context
         if not isinstance(authorizer, ChaliceAuthorizer):
             # Currently the only supported local authorizer is the
             # BuiltinAuthConfig type. Anything else we will err on the side of
