@@ -96,7 +96,7 @@ class TestPipelineGenV2(object):
         self.pipeline_gen = pipeline.CreatePipelineTemplateV2()
 
     def generate_template(self, app_name='appname',
-                          lambda_python_version='python3.9',
+                          lambda_python_version='python3.10',
                           codebuild_image=None, code_source='github',
                           pipeline_version='v2'):
         params = PipelineParameters(
@@ -245,8 +245,8 @@ def test_can_validate_python_version():
 
 
 def test_can_extract_python_version():
-    assert pipeline.PipelineParameters('app', 'python3.9').py_major_minor == (
-        '3.9')
+    assert pipeline.PipelineParameters('app', 'python3.14').py_major_minor == (
+        '3.14')
 
 
 def test_can_generate_github_source(pipeline_params):
@@ -259,10 +259,10 @@ def test_can_generate_github_source(pipeline_params):
 
 
 def test_can_create_buildspec_v2():
-    params = pipeline.PipelineParameters('myapp', 'python3.9')
+    params = pipeline.PipelineParameters('myapp', 'python3.14')
     buildspec = pipeline.create_buildspec_v2(params)
     assert buildspec['phases']['install']['runtime-versions'] == {
-        'python': '3.9',
+        'python': '3.14',
     }
 
 
