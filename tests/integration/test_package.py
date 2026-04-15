@@ -29,74 +29,125 @@ VERSION_CUTOFF = (3, 11)
 # versions greater than VERSION_CUTOFF.
 PACKAGES_TO_TEST = {
     'pandas': {
-        'version': '2.3.3',
-        'legacy_version': '1.5.3',
-        'contents': [
-            'pandas/*__init__.py',
-            'pandas/*cpython-*-x86_64-linux-gnu.so'
-        ],
+        'versions': {
+            'default': '2.3.3',
+            'legacy': '1.5.3',
+        },
+        'contents': {
+            'default': [
+                'pandas/*__init__.py',
+                'pandas/*cpython-*-x86_64-linux-gnu.so'
+            ],
+        },
     },
     'SQLAlchemy': {
-        'version': '2.0.40',
-        'legacy_version': '1.4.47',
-        'contents': [
-            'sqlalchemy/__init__.py',
-            'sqlalchemy/*cpython-*-x86_64-linux-gnu.so'
-        ],
+        'versions': {
+            'default': '2.0.40',
+            'legacy': '1.4.47',
+        },
+        'contents': {
+            'default': [
+                'sqlalchemy/__init__.py',
+                'sqlalchemy/*cpython-*-x86_64-linux-gnu.so'
+            ],
+            (3, 14): [
+                'sqlalchemy/__init__.py',
+            ],
+        },
     },
     'numpy': {
-        'version': '2.2.5',
-        'legacy_version': '1.23.3',
-        'contents': [
-            'numpy/__init__.py',
-            'numpy/*cpython-*-x86_64-linux-gnu.so'
-        ],
+        'versions': {
+            'default': '2.2.5',
+            (3, 14): '2.3.2',
+            'legacy': '1.23.3',
+        },
+        'contents': {
+            'default': [
+                'numpy/__init__.py',
+                'numpy/*cpython-*-x86_64-linux-gnu.so'
+            ],
+        },
     },
     'cryptography': {
-        'version': '44.0.3',
-        'legacy_version': '39.0.0',
-        'contents': [
-            'cryptography/__init__.py',
-            'cryptography/*.so'
-        ],
+        'versions': {
+            'default': '44.0.3',
+            'legacy': '39.0.0',
+        },
+        'contents': {
+            'default': [
+                'cryptography/__init__.py',
+                'cryptography/*.so'
+            ],
+        },
     },
     'Jinja2': {
-        'version': '3.1.6',
-        'legacy_version': '2.11.2',
-        'contents': ['jinja2/__init__.py'],
+        'versions': {
+            'default': '3.1.6',
+            'legacy': '2.11.2',
+        },
+        'contents': {
+            'default': ['jinja2/__init__.py'],
+        },
     },
     'Mako': {
-        'version': '1.3.10',
-        'legacy_version': '1.1.3',
-        'contents': ['mako/__init__.py'],
+        'versions': {
+            'default': '1.3.10',
+            'legacy': '1.1.3',
+        },
+        'contents': {
+            'default': ['mako/__init__.py'],
+        },
     },
     'MarkupSafe': {
-        'version': '3.0.2',
-        'legacy_version': '1.1.1',
-        'contents': ['markupsafe/__init__.py'],
+        'versions': {
+            'default': '3.0.2',
+            'legacy': '1.1.1',
+        },
+        'contents': {
+            'default': ['markupsafe/__init__.py'],
+        },
     },
     'scipy': {
-        'version': '1.15.3',
-        'legacy_version': '1.10.1',
-        'contents': [
-            'scipy/__init__.py',
-            'scipy/cluster/_hierarchy.cpython-*-x86_64-linux-gnu.so'
-        ],
+        'versions': {
+            'default': '1.15.3',
+            (3, 14): '1.16.3',
+            'legacy': '1.10.1',
+        },
+        'contents': {
+            'default': [
+                'scipy/__init__.py',
+                'scipy/cluster/_hierarchy.cpython-*-x86_64-linux-gnu.so'
+            ],
+        },
     },
     'cffi': {
-        'version': '1.17.1',
-        'legacy_version': '1.15.1',
-        'contents': ['_cffi_backend.cpython-*-x86_64-linux-gnu.so'],
+        'versions': {
+            'default': '1.17.1',
+            (3, 14): '2.0.0',
+            'legacy': '1.15.1',
+        },
+        'contents': {
+            'default': ['_cffi_backend.cpython-*-x86_64-linux-gnu.so'],
+        },
     },
     'pygit2': {
-        'version': '1.17.0',
-        'legacy_version': '1.10.1',
-        'contents': ['pygit2/_pygit2.cpython-*-x86_64-linux-gnu.so'],
+        'versions': {
+            'default': '1.17.0',
+            (3, 14): '1.19.1',
+            'legacy': '1.10.1',
+        },
+        'contents': {
+            'default': ['pygit2/_pygit2.cpython-*-x86_64-linux-gnu.so'],
+        },
     },
     'pyrsistent': {
-        'version': '0.20.0',
-        'legacy_version': '0.17.3',
-        'contents': ['pyrsistent/__init__.py'],
+        'versions': {
+            'default': '0.20.0',
+            'legacy': '0.17.3',
+        },
+        'contents': {
+            'default': ['pyrsistent/__init__.py'],
+        },
     },
 }
 
@@ -130,14 +181,24 @@ def _get_random_package_name():
 
 def _get_package_install_test_cases():
     testcases = []
-    if PY_VERSION <= VERSION_CUTOFF:
-        version_key = 'legacy_version'
-    else:
-        version_key = 'version'
     for package, config in PACKAGES_TO_TEST.items():
-        package_version = f'{package}=={config[version_key]}'
+        versions = config['versions']
+        contents_map = config['contents']
+        if PY_VERSION in versions:
+            version = versions[PY_VERSION]
+        elif PY_VERSION <= VERSION_CUTOFF:
+            version = versions['legacy']
+        else:
+            version = versions['default']
+        if PY_VERSION in contents_map:
+            contents = contents_map[PY_VERSION]
+        elif PY_VERSION <= VERSION_CUTOFF and 'legacy' in contents_map:
+            contents = contents_map['legacy']
+        else:
+            contents = contents_map['default']
+        package_version = f'{package}=={version}'
         testcases.append(
-            (package_version, config['contents'])
+            (package_version, contents)
         )
     return testcases
 
