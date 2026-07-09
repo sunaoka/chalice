@@ -3,12 +3,10 @@ on:
   push:
     branches:
       - master
-      - fork
       - "feature/**"
   pull_request:
     branches:
       - master
-      - fork
       - "feature/**"
 permissions:
   contents: read
