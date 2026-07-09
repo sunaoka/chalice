@@ -1,17 +1,16 @@
 Python Version Support
 ======================
 
-Chalice supports all versions of python supported by AWS Lambda, which is
-currently Python 3.10 and greater.  You can see the list of
+Chalice supports Python 3.10 through Python 3.14.  You can see the list of
 supported python versions for Lambda in their
 `docs <https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html>`__.
 
 Chalice will automatically pick which version of python to use for Lambda
-based on the major version of python you are using.  You don't have to
+based on the major/minor version of python you are using.  You don't have to
 explicitly configure which version of python you want to use. For example::
 
     $ python --version
-    Python 3.10.0
+    Python 3.10.20
     $ chalice new-project test-versions
     $ cd test-versions
     $ chalice package test-package
@@ -30,13 +29,13 @@ explicitly configure which version of python you want to use. For example::
     Initiating first time deployment...
     Deploying to: dev
     ...
-    "Runtime":"python3.6"
+    "Runtime":"python3.10"
     ...
     https://rest-api-id.execute-api.us-west-2.amazonaws.com/api/
 
 
-In the example above, we're using python 3.10.0 so chalice automatically
-selects the ``python3.10`` runtime for lambda.  If we were using python 3.14.0,
+In the example above, we're using python 3.10.20 so chalice automatically
+selects the ``python3.10`` runtime for lambda.  If we were using python 3.14,
 chalice would automatically select ``python3.14`` as the runtime.
 
 Chalice will emit a warning if the minor version does not match a python
@@ -57,7 +56,7 @@ python3.  For example, suppose you have an existing chalice app that uses
 Python 3.10 ::
 
     $ python --version
-    Python 3.10.0
+    Python 3.10.20
     $ chalice deploy
     ...
     https://endpoint/api
@@ -71,6 +70,6 @@ environment and redeploy.
     $ python3 -m venv /tmp/venv3
     $ source /tmp/venv3/bin/activate
     $ python --version
-    Python 3.14.0
+    Python 3.14.4
     $ chalice deploy
     ...

@@ -16,16 +16,16 @@ If you haven't already setup and configured Chalice, see the
 basic Chalice app created with::
 
     $ python3 --version
-    Python 3.14.0
-    $ python3 -m venv venv314
-    $ . venv314/bin/activate
+    Python 3.10.20
+    $ python3 -m venv .venv
+    $ . .venv/bin/activate
     $ python3 -m pip install chalice
     $ chalice new-project chalice-sns-demo
     $ cd chalice-sns-demo
 
 
 We'll also be using the AWS CLI in this tutorial.  You can follow
-`these instructions <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>`__
+`these instructions <https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html>`__
 for installing the AWS CLI v2.
 
 

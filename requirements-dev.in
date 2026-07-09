@@ -1,14 +1,9 @@
 -r requirements-test.in
 pylint<4.0.0
-doc8<1.0.0
+doc8<2.0.0
 pydocstyle
 flake8
-Sphinx==4.5.0
-sphinxcontrib-applehelp==1.0.4
-sphinxcontrib-devhelp==1.0.2
-sphinxcontrib-htmlhelp==2.0.1
-sphinxcontrib-serializinghtml==1.1.5
-sphinxcontrib-qthelp==1.0.3
+Sphinx==8.1.3
 docutils
 mypy
 wheel

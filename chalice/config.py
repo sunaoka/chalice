@@ -6,9 +6,9 @@ import json
 from typing import Dict, Any, Optional, List, Union  # noqa
 from chalice import __version__ as current_chalice_version
 from chalice.app import Chalice  # noqa
+from chalice.constants import DEFAULT_LAMBDA_ARCHITECTURE
 from chalice.constants import DEFAULT_STAGE_NAME
 from chalice.constants import DEFAULT_HANDLER_NAME
-from chalice.constants import DEFAULT_LAMBDA_ARCHITECTURE
 
 
 StrMap = Dict[str, Any]
@@ -151,7 +151,7 @@ class Config(object):
         major, minor = sys.version_info[0], sys.version_info[1]
         if (major, minor) < (3, 10):
             return 'python3.10'
-        elif (major, minor) <= (3, 14):
+        elif (major, minor) <= (3, 13):
             # Otherwise we use your current version of python if Lambda
             # supports it.
             return f'python{major}.{minor}'
